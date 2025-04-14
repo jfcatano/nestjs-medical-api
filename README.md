@@ -1,6 +1,6 @@
 # API para genera diagnósticos basados en IA
 
-Este proyecto es una API RESTful desarrollada con NestJS como parte de una prueba técnica. La API permite gestionar pacientes, generar diagnósticos sugeridos utilizando inteligencia artificial (OpenAI o un mock) y está construida siguiendo principios de arquitectura limpia (Hexagonal). Incluye autenticación JWT, manejo de roles y está preparada para ser desplegada en pocos con segundos con Docker.
+Este proyecto es una API RESTful desarrollada con NestJS como parte de una prueba técnica. La API permite gestionar pacientes, generar diagnósticos sugeridos utilizando inteligencia artificial (OpenAI o un mock) y está construida siguiendo principios de arquitectura limpia (Hexagonal). Incluye autenticación JWT, manejo de roles y está preparada para ser desplegada en pocos segundos con Docker.
 
 ## Tabla de Contenidos
 
@@ -18,7 +18,7 @@ Este proyecto es una API RESTful desarrollada con NestJS como parte de una prueb
 ## Características
 
 * **Gestión de Pacientes:** Operaciones CRUD completas para pacientes.
-* **Diagnóstico con IA:** Generación de diagnósticos sugeridos basados en el historial médico del paciente utilizando OpenAI (GPT-4o) o una simulación mock (este caso).
+* **Diagnóstico con IA:** Generación de diagnósticos sugeridos basados en el historial médico del paciente utilizando OpenAI (GPT-4o u otros) o una simulación mock.
 * **Autenticación JWT:** Sistema de login y registro con protección de rutas mediante JSON Web Tokens.
 * **Autorización por Roles:** Control de acceso a endpoints basado en roles (PATIENT, DOCTOR, ADMIN).
 * **Validación de Datos:** Uso de `class-validator` y `class-transformer` para validar DTOs.
