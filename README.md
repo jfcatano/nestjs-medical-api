@@ -11,7 +11,7 @@ Este proyecto es una API RESTful desarrollada con NestJS como parte de una prueb
 -   [Configuración del Entorno](#configuración-del-entorno)
 -   [Instalación](#instalación)
 -   [Ejecutando la Aplicación](#ejecutando-la-aplicación)
--   [Documentación de la API](#documentación-de-la-api-swagger)
+-   [Documentación de la API](#documentación-de-la-api)
 -   [Autenticación y Roles](#autenticación-y-roles)
 -   [Integración con OpenAI](#integración-con-openai)
 
@@ -90,11 +90,13 @@ Para esta ocasión no se realizará el paso a paso para realizar la instalación
 
 ## Ejecutando la Aplicación
 
-Para levantar la API debes estar dentro del directorio `nestjs-medical-api` y ejecutar el siguiente comando:
+1. Para levantar la API debes estar dentro del directorio `nestjs-medical-api` y ejecutar el siguiente comando:
     ```bash
     docker compose up -d
+    ```
 
-    # Esperar a que Docker levante los contenedores con la API y la base de datos y luego ejecutar:
+2. Esperar a que Docker levante los contenedores con la API y la base de datos y luego ejecutar:
+    ```bash
     npx prisma migrate dev
     ```
 
