@@ -1,98 +1,118 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# API para genera diagnósticos basados en IA
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Este proyecto es una API RESTful desarrollada con NestJS como parte de una prueba técnica. La API permite gestionar pacientes, generar diagnósticos sugeridos utilizando inteligencia artificial (OpenAI o un mock) y está construida siguiendo principios de arquitectura limpia (Hexagonal). Incluye autenticación JWT, manejo de roles y está preparada para ser desplegada en pocos con segundos con Docker.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Tabla de Contenidos
 
-## Description
+-   [Características](#características)
+-   [Arquitectura](#arquitectura)
+-   [Tecnologías Utilizadas](#tecnologías-utilizadas)
+-   [Prerrequisitos](#prerrequisitos)
+-   [Configuración del Entorno](#configuración-del-entorno)
+-   [Instalación](#instalación)
+-   [Ejecutando la Aplicación](#ejecutando-la-aplicación)
+-   [Documentación de la API](#documentación-de-la-api-swagger)
+-   [Autenticación y Roles](#autenticación-y-roles)
+-   [Integración con OpenAI](#integración-con-openai)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Características
 
-## Project setup
+* **Gestión de Pacientes:** Operaciones CRUD completas para pacientes.
+* **Diagnóstico con IA:** Generación de diagnósticos sugeridos basados en el historial médico del paciente utilizando OpenAI (GPT-4o) o una simulación mock (este caso).
+* **Autenticación JWT:** Sistema de login y registro con protección de rutas mediante JSON Web Tokens.
+* **Autorización por Roles:** Control de acceso a endpoints basado en roles (PATIENT, DOCTOR, ADMIN).
+* **Validación de Datos:** Uso de `class-validator` y `class-transformer` para validar DTOs.
+* **Documentación API:** Documentación de endpoints con Swagger.
+* **Base de Datos:** Interacción con base de datos (PostgreSQL) utilizando Prisma ORM.
+* **Manejo de Errores:** Filtro global de excepciones para respuestas de error consistentes.
+* **Logging de IA:** Registro de las interacciones con el servicio de IA en la base de datos.
+* **Dockerización:** Soporte completo para Docker y Docker Compose para un fácil y rápido despliegue.
 
-```bash
-$ npm install
+## Arquitectura
+
+El proyecto sigue principios de **Arquitectura Limpia** (Arquitectura Hexagonal), separando las responsabilidades en las siguientes capas principales dentro del directorio `src/`:
+
+1.  **Domain:** Contiene las entidades (`entities/`) y las interfaces de repositorios (`repositories/`).
+2.  **Application:** Contiene los servicios de aplicación o casos de uso (`services/`) y los Data Transfer Objects (`dto/`).
+3.  **Infrastructure:** Implementa detalles técnicos como la base de datos (Prisma), servicios externos (OpenAI), autenticación (Passport, JWT y Guards). Se divide en subdirectorios como `database/`, `ai/`, `auth/`.
+4.  **Presentation:** Expone la aplicación al exterior a través de una API REST. Contiene los controladores (`controllers/`) y módulos de NestJS (`modules/`).
+
+## Tecnologías Utilizadas
+
+* **Framework:** NestJS
+* **Lenguaje:** TypeScript
+* **ORM:** Prisma
+* **Base de Datos:** PostgreSQL
+* **API Docs:** Swagger
+* **Validación:** class-validator y class-transformer
+* **Autenticación:** Passport.js, JWT y bcrypt
+* **IA:** OpenAI (`openai` npm package)
+* **Contenerización:** Docker, Docker Compose
+
+## Prerrequisitos
+
+* Node.js (v22 o superior recomendado)
+* npm
+* Docker
+* Docker Compose
+* Una instancia de PostgreSQL (si no se usa Docker)
+
+## Configuración del Entorno
+
+Crear un archivo `.env` en la raíz del proyecto con las siguientes variables (Las variables por defecto ya están en .env.example):
+
+```env
+# Puerto en el que correrá la API
+PORT=3000
+
+# URL de conexión a la base de datos PostgreSQL (usada por Prisma).
+# Formato: postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=public
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/patients_db?schema=public
+
+# Secreto para firmar los JWT
+JWT_SECRET=tu_secreto_super_seguro_aqui
+
+# API Key de OpenAI
+# Si quieres usar el MOCK (Keywords), déjala como 'fake-key'
+# Si quieres usar la API real, reemplaza 'fake-key' con un API Key válida de OpenAI (Debe tener créditos en la cuenta)
+OPENAI_API_KEY=fake-key
 ```
 
-## Compile and run the project
+## Instalación
 
-```bash
-# development
-$ npm run start
+Para esta ocasión no se realizará el paso a paso para realizar la instalación e inicialización sin Docker.
 
-# watch mode
-$ npm run start:dev
+1.  **Clona el repositorio:**
+    ```bash
+    git clone https://github.com/jfcatano/nestjs-medical-api
+    cd nestjs-medical-api
+    ```
 
-# production mode
-$ npm run start:prod
-```
+## Ejecutando la Aplicación
 
-## Run tests
+Para levantar la API debes estar dentro del directorio `nestjs-medical-api` y ejecutar el siguiente comando:
+    ```bash
+    docker compose up -d
 
-```bash
-# unit tests
-$ npm run test
+    # Esperar a que Docker levante los contenedores con la API y la base de datos y luego ejecutar:
+    npx prisma migrate dev
+    ```
 
-# e2e tests
-$ npm run test:e2e
+## Documentación de la API
 
-# test coverage
-$ npm run test:cov
-```
+La API se encuentra totalmente documentada en el endpoint/url http://localhost:3000/api/docs el cual es accesible una vez la API sea levantada con éxito.
 
-## Deployment
+# Autenticación y Roles
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+Los roles son `PATIENT`, `DOCTOR` y `ADMIN`. Solo los dos últimos tienen acceso a crear diagnósticos. Para poder probar la API adecuadamente, es ideal crear un usuario con cada rol usando Swagger para mayor facilidad.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+# Integración con OpenAI
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+El proyecto está totalmente preparado para funcionar con OpenAI, sin embargo, debido a las limitaciones (no hay capa gratuita) las pruebas de funcionamiento se realizaron con un mock. Si no tienes una key de OpenAI es posible usar `fake-key` como KEY, y los diagnósticos se basarán en algunos keywords que hay en dicho mock.
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
 
-## Resources
+---
 
-Check out a few resources that may come in handy when working with NestJS:
+Con esto finalizo el README.md del repositorio, ¡muchas gracias!
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Juan Fernando Cataño Posada.
